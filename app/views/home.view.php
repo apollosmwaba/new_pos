@@ -225,6 +225,16 @@
 
 	function product_html(data,index)
 	{
+		let priceDisplay = `<div class="" style="font-size:20px"><b>$${data.amount}</b></div>`;
+		
+		if (data.has_discount && data.discounted_price && data.discounted_price !== data.amount) {
+			priceDisplay = `
+				<div class="" style="font-size:20px">
+					<span style="text-decoration:line-through;color:#888;font-size:16px;">$${data.amount}</span>
+					<span class="text-danger fw-bold ms-2"><b>$${data.discounted_price}</b></span>
+				</div>
+			`;
+		}
 
 		return `
 			<!--card-->
@@ -234,17 +244,20 @@
 				</a>
 				<div class="p-2">
 					<div class="text-muted">${data.description}</div>
-					<div class="" style="font-size:20px"><b>$${data.amount}</b></div>
+					${priceDisplay}
 				</div>
 			</div>
 			<!--end card-->
 			`;
-
-				
 	}
 
 	function item_html(data,index)
 	{
+		// Use discounted price if available, otherwise use original price
+		var priceHtml = `<b>$${data.amount}</b>`;
+		if (data.has_discount && data.discounted_price && data.discounted_price !== data.amount) {
+			priceHtml = `<span style='text-decoration:line-through;color:#888;font-size:16px;'>$${data.amount}</span> <span class='text-danger fw-bold ms-2'>$${data.discounted_price}</span>`;
+		}
 
 		return `
 			<!--item-->
@@ -261,13 +274,12 @@
 
 				</td>
 				<td style="font-size:20px">
-					<b>$${data.amount}</b>
+					${priceHtml}
 					<button onclick="clear_item(${index})" class="float-end btn btn-danger btn-sm"><i class="fa fa-times"></i></button>
 				</td>
 			</tr>
 			<!--end item-->
 			`;
-				
 	}
 
 	
@@ -316,7 +328,11 @@
 		for (var i = ITEMS.length - 1; i >= 0; i--) {
 
 			items_div.innerHTML += item_html(ITEMS[i],i);
-			grand_total += (ITEMS[i].qty * ITEMS[i].amount);
+			// Use discounted price if available, otherwise use original price
+			var price = ITEMS[i].discounted_price && ITEMS[i].discounted_price !== ITEMS[i].amount
+				? parseFloat(ITEMS[i].discounted_price)
+				: parseFloat(ITEMS[i].amount);
+			grand_total += (ITEMS[i].qty * price);
 		}
 		
 		var gtotal_div = document.querySelector(".js-gtotal");

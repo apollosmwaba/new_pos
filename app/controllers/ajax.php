@@ -33,10 +33,26 @@ if(!empty($raw_data))
 			if($rows){
 
 				foreach ($rows as $key => $row) {
-					
-					$rows[$key]['description'] = strtoupper($row['description']);
-					$rows[$key]['image'] = crop($row['image']);
-				}
+    $rows[$key]['description'] = strtoupper($row['description']);
+    $rows[$key]['image'] = crop($row['image']);
+    // Discount calculation
+    $price = isset($row['selling_price']) && $row['selling_price'] > 0 ? (float)$row['selling_price'] : (float)$row['amount'];
+    $final_price = $price;
+    $has_discount = false;
+    if (!empty($row['discount_type']) && $row['discount_value'] > 0) {
+        if ($row['discount_type'] === 'percent') {
+            $discount = $price * ((float)$row['discount_value'] / 100);
+            $final_price = $price - $discount;
+            $has_discount = true;
+        } elseif ($row['discount_type'] === 'fixed') {
+            $final_price = $price - (float)$row['discount_value'];
+            $has_discount = true;
+        }
+    }
+    $rows[$key]['has_discount'] = $has_discount;
+    $rows[$key]['discounted_price'] = $has_discount ? number_format($final_price, 2, '.', '') : null;
+    $rows[$key]['amount'] = number_format($price, 2, '.', '');
+}
 
 				$info['data_type'] = "search";
 				$info['data'] = $rows;

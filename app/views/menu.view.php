@@ -25,8 +25,11 @@
                                 <div class="alert alert-success p-1 text-center mb-2"><strong><?=esc($product['promo_text'])?></strong></div>
                             <?php endif; ?>
                             <?php
-                                $price = isset($product['selling_price']) ? (float)$product['selling_price'] : 0;
+                                $price = (isset($product['selling_price']) && $product['selling_price'] > 0)
+    ? (float)$product['selling_price']
+    : (isset($product['amount']) ? (float)$product['amount'] : 0);
                                 $discounted = false;
+                                $final_price = $price;
                                 if (!empty($product['discount_type']) && $product['discount_value'] > 0) {
                                     if ($product['discount_type'] === 'percent') {
                                         $discount = $price * ($product['discount_value'] / 100);
@@ -40,7 +43,7 @@
                             ?>
                             <p class="card-text mb-1">
                                 <strong>Price:</strong>
-                                <?php if ($discounted): ?>
+                                <?php if ($discounted && $final_price != $price): ?>
                                     <span style="text-decoration:line-through;color:#888;">K<?=number_format($price,2)?></span>
                                     <span class="text-danger fw-bold ms-2">K<?=number_format($final_price,2)?></span>
                                 <?php else: ?>
