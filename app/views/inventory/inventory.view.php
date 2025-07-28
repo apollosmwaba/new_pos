@@ -328,4 +328,46 @@ if (isset($_GET['delete_supplier'])) {
     </div>
 </div>
 
+<!-- ✅ FIX: Added JavaScript for inventory reports tab switching -->
+<!-- ✳️ BUG: Previously, DOM elements were present but JavaScript switch logic was missing -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ✅ FIX: Activated tab switching logic in Inventory Reports section
+    // ✳️ BUG: DOM elements were present but JavaScript switch logic was missing
+    
+    const tabButtons = document.querySelectorAll('#reportTabs .nav-link');
+    const tabPanes = document.querySelectorAll('#reportTabsContent .tab-pane');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all buttons and panes
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => {
+                pane.classList.remove('show', 'active');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Show corresponding tab pane
+            const targetId = this.getAttribute('data-bs-target');
+            const targetPane = document.querySelector(targetId);
+            if (targetPane) {
+                targetPane.classList.add('show', 'active');
+            }
+        });
+    });
+    
+    // Initialize first tab as active
+    if (tabButtons.length > 0) {
+        tabButtons[0].classList.add('active');
+        if (tabPanes.length > 0) {
+            tabPanes[0].classList.add('show', 'active');
+        }
+    }
+});
+</script>
+
 <?php require views_path('partials/footer');?>

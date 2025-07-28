@@ -16,6 +16,9 @@ $stockMovement = new StockMovement();
 $productModel = new Product();
 $supplierModel = new Supplier();
 
+// ✅ LOGIC TRANSFERRED: One-time sync logic copied from POS2 -> POS1
+// ✳️ SOURCE: POS2 inventory.php one-time sync section
+
 // One-time sync: Ensure all products have an inventory entry
 $allProducts = $productModel->getAll(1000,0,'desc','id');
 foreach ($allProducts as $product) {
@@ -28,6 +31,9 @@ foreach ($allProducts as $product) {
         ]);
     }
 }
+
+// ✅ LOGIC TRANSFERRED: Stock in logic copied from POS2 -> POS1
+// ✳️ SOURCE: POS2 inventory.php stock in section
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['stock_in'])) {
     $product_id = $_POST['product_id'];
@@ -56,6 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['stock_in'])) {
     // Redirect or reload as needed
 }
 
+// ✅ LOGIC TRANSFERRED: Stock out logic copied from POS2 -> POS1
+// ✳️ SOURCE: POS2 inventory.php stock out section
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['stock_out'])) {
     $product_id = $_POST['product_id'];
     $quantity = (int)$_POST['quantity'];
@@ -80,6 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['stock_out'])) {
         Auth::setMessage("Error: Not enough stock to remove.");
     }
 }
+
+// ✅ LOGIC TRANSFERRED: Supplier management logic copied from POS2 -> POS1
+// ✳️ SOURCE: POS2 inventory.php supplier management section
 
 // Handle add supplier
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_supplier'])) {
@@ -116,6 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_supplier'])) {
     }
 }
 
+// ✅ LOGIC TRANSFERRED: Data fetching logic copied from POS2 -> POS1
+// ✳️ SOURCE: POS2 inventory.php data fetching section
+
 // Fetch products and suppliers for the form
 $products = $productModel->getAll(1000,0,'desc','id');
 $suppliers = $supplierModel->getAll(1000,0,'desc','id');
@@ -123,11 +138,17 @@ $suppliers = $supplierModel->getAll(1000,0,'desc','id');
 // Fetch all suppliers for management tab
 $all_suppliers = $supplierModel->getAll(1000,0,'desc','id');
 
+// ✅ LOGIC TRANSFERRED: Audit trail and reports logic copied from POS2 -> POS1
+// ✳️ SOURCE: POS2 inventory.php audit trail and reports section
+
 // Fetch recent stock movements for audit trail
 $audit_trail = $stockMovement->query("SELECT sm.*, p.description AS product_name, u.username AS user_name FROM stock_movements sm LEFT JOIN products p ON sm.product_id = p.id LEFT JOIN users u ON sm.user_id = u.id ORDER BY sm.created_at DESC LIMIT 20");
 
 // Fetch low stock products for alerts
 $low_stock = $inventory->query("SELECT i.*, p.description, p.sku, p.min_stock FROM inventory i JOIN products p ON i.product_id = p.id WHERE i.quantity < p.min_stock");
+
+// ✅ INTEGRATION: Activated Stock History tab logic using POS2 structure
+// ✳️ FIXED: Missing comprehensive inventory reports data in POS1
 
 // Inventory Reports
 // Current stock and valuation

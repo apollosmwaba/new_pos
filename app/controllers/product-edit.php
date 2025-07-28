@@ -45,12 +45,27 @@ if($_SERVER['REQUEST_METHOD'] == "POST" && $row)
 
 		$product->update($row['id'],$_POST);
 
+		// Update inventory quantity if changed
+		require_once "../app/models/Inventory.php";
+		$inventory = new Inventory();
+		$inventory_row = $inventory->getByProduct($row['id']);
+		if ($inventory_row) {
+			$inventory->update($inventory_row['id'], [
+				'quantity' => $_POST['qty'] ?? $inventory_row['quantity'],
+				'updated_at' => date('Y-m-d H:i:s')
+			]);
+		}
+
 		redirect('admin&tab=products');
 	}
 
 
 }
 
+// Fetch suppliers for the dropdown
+require_once "../app/models/Supplier.php";
+$supplierModel = new Supplier();
+$suppliers = $supplierModel->getAll(1000,0,'desc','id');
 
 require views_path('products/product-edit');
 

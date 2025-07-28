@@ -2,13 +2,46 @@
 
 <div class="container-fluid border rounded p-4 m-2 col-lg-5 mx-auto">
     <?php if(!empty($row)):?>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <h5 class="text-primary"><i class="fa fa-hamburger"></i> Edit Product</h5>
         <div class="mb-3">
             <label class="form-label">Product Description</label>
-            <input value="<?=set_value('description',$row['description'])?>" name="description" type="text" class="form-control <?=!empty($errors['description']) ? 'border-danger':''?>" placeholder="Product description">
+            <input value="<?=set_value('description',$row['description'])?>" name="description" type="text" class="form-control <?=!empty($errors['description']) ? 'border-danger':''?>" placeholder="Product description" required>
             <?php if(!empty($errors['description'])):?>
                 <small class="text-danger"><?=$errors['description']?></small>
+            <?php endif;?>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Barcode <span class="text-muted small">(optional)</span></label>
+            <input value="<?=set_value('barcode',$row['barcode'])?>" name="barcode" type="text" class="form-control <?=!empty($errors['barcode']) ? 'border-danger':''?>" placeholder="Product barcode">
+            <?php if(!empty($errors['barcode'])):?>
+                <small class="text-danger"><?=$errors['barcode']?></small>
+            <?php endif;?>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Quantity</label>
+                <input value="<?=set_value('qty',$row['qty'])?>" name="qty" type="number" class="form-control <?=!empty($errors['qty']) ? 'border-danger':''?>" min="1" required>
+                <?php if(!empty($errors['qty'])):?>
+                    <small class="text-danger"><?=$errors['qty']?></small>
+                <?php endif;?>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Amount</label>
+                <input value="<?=set_value('amount',$row['amount'])?>" name="amount" type="number" step="0.01" class="form-control <?=!empty($errors['amount']) ? 'border-danger':''?>" min="0" required>
+                <?php if(!empty($errors['amount'])):?>
+                    <small class="text-danger"><?=$errors['amount']?></small>
+                <?php endif;?>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Product Image</label>
+            <input name="image" type="file" class="form-control <?=!empty($errors['image']) ? 'border-danger':''?>">
+            <?php if(!empty($errors['image'])):?>
+                <small class="text-danger"><?=$errors['image']?></small>
+            <?php endif;?>
+            <?php if(!empty($row['image'])):?>
+                <small class="text-muted">Current image: <?=$row['image']?></small>
             <?php endif;?>
         </div>
         <div class="mb-3">
