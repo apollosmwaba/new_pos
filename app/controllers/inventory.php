@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['stock_in'])) {
         'product_id' => $product_id,
         'user_id' => $user_id,
         'type' => 'in',
-        'quantity' => $quantity,
+        'qty' => $quantity, // changed from 'quantity' to 'qty'
         'reason' => 'Restock',
         'supplier_id' => $supplier_id,
         'cost' => $cost,
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['stock_out'])) {
             'product_id' => $product_id,
             'user_id' => $user_id,
             'type' => 'out',
-            'quantity' => $quantity,
+            'qty' => $quantity, // changed from 'quantity' to 'qty'
             'reason' => $reason,
             'created_at' => date('Y-m-d H:i:s')
         ]);
@@ -142,13 +142,10 @@ $all_suppliers = $supplierModel->getAll(1000,0,'desc','id');
 // ✳️ SOURCE: POS2 inventory.php audit trail and reports section
 
 // Fetch recent stock movements for audit trail
-$audit_trail = $stockMovement->query("SELECT sm.*, p.description AS product_name, u.username AS user_name FROM stock_movements sm LEFT JOIN products p ON sm.product_id = p.id LEFT JOIN users u ON sm.user_id = u.id ORDER BY sm.created_at DESC LIMIT 20");
+$audit_trail = $stockMovement->query("SELECT sm.*, sm.qty AS quantity, p.description AS product_name, u.username AS user_name FROM stock_movements sm LEFT JOIN products p ON sm.product_id = p.id LEFT JOIN users u ON sm.user_id = u.id ORDER BY sm.created_at DESC LIMIT 20");
 
 // Fetch low stock products for alerts
 $low_stock = $inventory->query("SELECT i.*, p.description, p.sku, p.min_stock FROM inventory i JOIN products p ON i.product_id = p.id WHERE i.quantity < p.min_stock");
-
-// ✅ INTEGRATION: Activated Stock History tab logic using POS2 structure
-// ✳️ FIXED: Missing comprehensive inventory reports data in POS1
 
 // Inventory Reports
 // Current stock and valuation
@@ -160,7 +157,7 @@ $current_stock = $inventory->query("
 
 // Stock movement history (last 30 days)
 $stock_history = $stockMovement->query("
-    SELECT sm.*, p.description AS product_name, u.username AS user_name
+    SELECT sm.*, sm.qty AS quantity, p.description AS product_name, u.username AS user_name
     FROM stock_movements sm
     LEFT JOIN products p ON sm.product_id = p.id
     LEFT JOIN users u ON sm.user_id = u.id
@@ -170,7 +167,7 @@ $stock_history = $stockMovement->query("
 
 // Fast movers (top 5 most moved in last 30 days)
 $fast_movers = $stockMovement->query("
-    SELECT p.description, p.sku, SUM(sm.quantity) AS total_moved
+    SELECT p.description, p.sku, SUM(sm.qty) AS total_moved
     FROM stock_movements sm
     JOIN products p ON sm.product_id = p.id
     WHERE sm.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
@@ -181,7 +178,7 @@ $fast_movers = $stockMovement->query("
 
 // Slow movers (top 5 least moved in last 30 days)
 $slow_movers = $stockMovement->query("
-    SELECT p.description, p.sku, SUM(sm.quantity) AS total_moved
+    SELECT p.description, p.sku, SUM(sm.qty) AS total_moved
     FROM stock_movements sm
     JOIN products p ON sm.product_id = p.id
     WHERE sm.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)

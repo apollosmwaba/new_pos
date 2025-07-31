@@ -115,6 +115,7 @@ if (isset($_GET['delete_supplier'])) {
         </div>
     </div>
 
+   
     <div class="card mb-4">
         <div class="card-header bg-info text-white">
             <i class="fa fa-history me-2"></i>Audit Trail (Recent Stock Movements)
@@ -167,8 +168,7 @@ if (isset($_GET['delete_supplier'])) {
             </table>
         </div>
     </div>
-
-    <div class="card mb-4">
+            <div class="card mb-4">
         <div class="card-header bg-primary text-white">
             <i class="fa fa-chart-bar me-2"></i>Inventory Reports
         </div>

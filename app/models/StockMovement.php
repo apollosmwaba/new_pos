@@ -9,7 +9,10 @@ class StockMovement extends Model
         'type',
         'qty',
         'user_id',
-        'date'
+        'reason',
+        'supplier_id',
+        'cost',
+        'created_at'
     ];
 
     public function validate($data)
