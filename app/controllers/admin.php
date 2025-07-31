@@ -249,7 +249,9 @@ if($tab == "register")
 {
     $db = new Database();
     $session_logs = $db->query("SELECT * FROM session_log ORDER BY id DESC LIMIT 100");
-    $sales_logs = $db->query("SELECT * FROM sales_log ORDER BY id DESC LIMIT 100");
+    // Fetch recent sales for Register tab
+    $sales = $db->query("SELECT s.*, u.username as admin FROM sales s LEFT JOIN users u ON s.user_id = u.id ORDER BY s.id DESC LIMIT 20");
+
     $audit_logs = $db->query("SELECT * FROM audit_log ORDER BY id DESC LIMIT 100");
     // require views_path('admin/register'); // Removed to prevent duplicate rendering. Only render in admin dashboard view.
 }

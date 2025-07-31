@@ -160,27 +160,7 @@ if(!empty($raw_data))
 			// ✅ FIX: Enhanced sales logging for better audit trail
 			// ✳️ NOTE: Added comprehensive logging for sales tracking
 			
-			// Log to sales_log
-			try {
-				$result = $db->query(
-					"INSERT INTO sales_log (user_id, sale_time, total_amount, details) VALUES (:user_id, :sale_time, :total_amount, :details)",
-					[
-						'user_id' => $user_id,
-						'sale_time' => $date,
-						'total_amount' => $total_amount,
-						'details' => json_encode($details)
-					]
-				);
-				if ($result === false) {
-					error_log('Failed to insert into sales_log.');
-					echo json_encode(['error' => 'Failed to insert into sales_log.']);
-					exit;
-				}
-			} catch (Exception $e) {
-				error_log('Exception inserting into sales_log: ' . $e->getMessage());
-				echo json_encode(['error' => 'Exception inserting into sales_log: ' . $e->getMessage()]);
-				exit;
-			}
+
 			
 			// ✅ FIX: Added audit log entry for complete transaction tracking
 			// ✳️ NOTE: Ensures all sales are properly logged for audit purposes

@@ -9,8 +9,8 @@ class Database
 
 	private function db_connect(){
 
-		$DBHOST = "localhost";
-		$DBNAME = "post";
+		$DBHOST = "localhost:8082";
+		$DBNAME = "pos_db";
 		$DBUSER = "root";
 		$DBPASS = "";
 		$DBDRIVER = "mysql";

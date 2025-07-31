@@ -1,9 +1,9 @@
 <?php 
 
-require "../app/core/config.php";
-require "../app/core/functions.php";
-require "../app/core/database.php";
-require "../app/core/model.php";
+require_once __DIR__ . "/config.php";
+require_once __DIR__ . "/functions.php";
+require_once __DIR__ . "/database.php";
+require_once __DIR__ . "/model.php";
 
 spl_autoload_register('my_function');
 
