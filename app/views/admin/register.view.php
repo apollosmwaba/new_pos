@@ -70,10 +70,10 @@
                     <tr>
                         <th>ID</th>
                         <th>User ID</th>
-                        <th>Action Type</th>
+                        <!-- <th>Action Type</th> -->
                         <th>Action Time</th>
                         <th>Description</th>
-                        <th>Related Sale ID</th>
+                        <!-- <th>Related Sale ID</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -82,10 +82,10 @@
                             <tr>
                                 <td><?=esc($log['id'])?></td>
                                 <td><?=esc($log['user_id'])?></td>
-                                <td><?=esc($log['action_type'])?></td>
+                                <!-- <td><?=esc($log['action_type'])?></td> -->
                                 <td><?=esc($log['action_time'])?></td>
                                 <td><?=esc($log['description'])?></td>
-                                <td><?=esc($log['related_sale_id'])?></td>
+                                <!-- <td><?=esc($log['related_sale_id'])?></td> -->
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
